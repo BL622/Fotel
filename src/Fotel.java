@@ -14,6 +14,8 @@ public class Fotel extends JFrame {
     private JSlider depthSlider;
     private List<JSlider> sliders = new ArrayList<>();
     private int focusedSliderIndex = 0;
+    public int setFocusOnView = 0;
+    public int focusedViewIndex = 0;
 
     public Fotel() {
         model = new ArmChairModel();
@@ -26,10 +28,38 @@ public class Fotel extends JFrame {
         MenuBuilder menuBuilder = new MenuBuilder(this, model);
         setJMenuBar(menuBuilder.buildMenuBar());
 
+        switch (setFocusOnView) {
+            case 0:
+                normalViewMenu();
+                break;
+            case 1:
+                focusViewMenu();
+                break;
+        }
+    }
+
+    public void updateView() {
+        getContentPane().removeAll();
+
+        switch (setFocusOnView) {
+            case 0:
+                normalViewMenu();
+                break;
+            case 1:
+                focusViewMenu();
+                break;
+        }
+        new KeyBindingManager(this, model).setupKeyBindings();
+
+        revalidate();
+        repaint();
+    }
+
+
+    private void normalViewMenu(){
         // Control Panel
         JPanel controlPanel = createControlPanel();
         add(controlPanel, BorderLayout.WEST);
-
         // Views
         JPanel gridPanel = new JPanel(new GridLayout(2, 2));
         gridPanel.add(new ArmChairViewPanel("Elölnézet", model) {
@@ -75,6 +105,77 @@ public class Fotel extends JFrame {
         // Setup key bindings
         new KeyBindingManager(this, model).setupKeyBindings();
     }
+
+    private void focusViewMenu() {
+        setTitle("Fókuszált Nézet – Fotel");
+
+        JPanel gridPanel = new JPanel(new GridLayout(1, 1));
+
+        ArmChairViewPanel viewPanel = new ArmChairViewPanel("Nézet", model) {
+            @Override
+            protected void drawView(Graphics g) {
+                switch (focusedViewIndex) {
+                    case 0:
+                        drawFrontView(g);
+                        break;
+                    case 1:
+                        drawSideView(g);
+                        break;
+                    case 2:
+                        drawTopView(g);
+                        break;
+                }
+            }
+        };
+
+        gridPanel.add(viewPanel);
+        add(gridPanel, BorderLayout.CENTER);
+
+        // Control Panel on the left
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+        controlPanel.setPreferredSize(new Dimension(200, 0));
+        controlPanel.setBorder(BorderFactory.createTitledBorder("Váltás nézetek között"));
+
+        JButton frontButton = new JButton("Elölnézet [1]");
+        frontButton.addActionListener(e -> {
+            focusedViewIndex = 0;
+            updateView();
+        });
+
+        JButton sideButton = new JButton("Oldalnézet [2]");
+        sideButton.addActionListener(e -> {
+            focusedViewIndex = 1;
+            updateView();
+        });
+
+        JButton topButton = new JButton("Felülnézet [3]");
+        topButton.addActionListener(e -> {
+            focusedViewIndex = 2;
+            updateView();
+        });
+
+        JButton backToNormal = new JButton("Vissza [0]");
+        backToNormal.addActionListener(e -> {
+            setFocusOnView = 0;
+            updateView();
+        });
+
+        controlPanel.add(frontButton);
+        controlPanel.add(Box.createVerticalStrut(10));
+        controlPanel.add(sideButton);
+        controlPanel.add(Box.createVerticalStrut(10));
+        controlPanel.add(topButton);
+        controlPanel.add(Box.createVerticalStrut(20));
+        controlPanel.add(backToNormal);
+
+        add(controlPanel, BorderLayout.WEST);
+
+        setSize(1000, 700);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
 
     private JPanel createControlPanel() {
         JPanel controlPanel = new JPanel();
@@ -135,8 +236,17 @@ public class Fotel extends JFrame {
         addColorButton(controlPanel, "Díszpárna szín [7]", model.getPillowColor(),
                 color -> model.setPillowColor(color));
 
+        JButton addFocusButton = new JButton("Fókusz [8]");
+        addFocusButton.addActionListener(e -> {
+            setFocusOnView = 1;
+            updateView();
+        });
+
+        controlPanel.add(addFocusButton);
+
         return controlPanel;
     }
+
 
     private void addColorButton(JPanel panel, String text, Color currentColor, Consumer<Color> colorConsumer) {
         JButton button = new JButton(text);

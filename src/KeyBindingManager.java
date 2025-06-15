@@ -82,6 +82,23 @@ public class KeyBindingManager {
                 KeyStroke.getKeyStroke(KeyEvent.VK_H,KeyEvent.CTRL_DOWN_MASK),
                 () -> parent.help());
 
+
+
+
+        switch (parent.setFocusOnView){
+            case 0:
+                normalViewKeyBindings(inputMap, actionMap);
+                break;
+            case 1:
+                focusViewKeyBindings(inputMap, actionMap);
+                break;
+
+        }
+
+
+    }
+
+    private void normalViewKeyBindings(InputMap inputMap, ActionMap actionMap) {
         // Slider controls
         addKeyBinding(inputMap, actionMap, "focusWidth",
                 KeyStroke.getKeyStroke(KeyEvent.VK_1, 0),
@@ -126,6 +143,36 @@ public class KeyBindingManager {
                 ()->{
                     parent.openColorChooser("díszpárna színt", model.getPillowColor(), color -> model.setPillowColor(color));
                 });
+
+        addKeyBinding(inputMap, actionMap, "changeToFocusedView",
+                KeyStroke.getKeyStroke(KeyEvent.VK_8, 0),
+                () ->{parent.setFocusOnView = 1;
+                    parent.updateView();
+                });
+    }
+
+    private void focusViewKeyBindings(InputMap inputMap, ActionMap actionMap) {
+        addKeyBinding(inputMap, actionMap, "setFocusOnFrontView",
+                KeyStroke.getKeyStroke(KeyEvent.VK_1, 0),
+                () ->{parent.focusedViewIndex = 0;
+                    parent.updateView();
+                });
+        addKeyBinding(inputMap, actionMap, "setFocusOnSideView",
+                KeyStroke.getKeyStroke(KeyEvent.VK_2, 0),
+                () -> {parent.focusedViewIndex = 1;
+                    parent.updateView();
+                });
+        addKeyBinding(inputMap, actionMap, "setFocusOnTopView",
+                KeyStroke.getKeyStroke(KeyEvent.VK_3, 0),
+                () -> {parent.focusedViewIndex = 2;
+                        parent.updateView();
+                        });
+        addKeyBinding(inputMap, actionMap, "changeToNormalView",
+                KeyStroke.getKeyStroke(KeyEvent.VK_0, 0),
+                () ->{parent.setFocusOnView = 0;
+                    parent.updateView();
+                });
+
     }
 
     private void addArrowKeyBinding(InputMap inputMap, ActionMap actionMap, int keyCode, Runnable action) {
