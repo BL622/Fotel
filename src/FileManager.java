@@ -15,7 +15,7 @@ public class FileManager {
         this.model = model;
     }
 
-    public void saveLocal(){
+    public void saveLocal() {
         SwingUtilities.invokeLater(() -> {
             JPanel panel = new JPanel(new BorderLayout(10, 10));
 
@@ -53,20 +53,27 @@ public class FileManager {
                         writer.print(model.getWidth() + ";");
                         writer.print(model.getHeight() + ";");
                         writer.print(model.getDepth() + ";");
-                        writer.print(model.getBaseColor().getRed() + ";" + model.getBaseColor().getGreen() + ";" + model.getBaseColor().getBlue() + ";");
-                        writer.print(model.getCushionColor().getRed() + ";" + model.getCushionColor().getGreen() + ";" + model.getCushionColor().getBlue() + ";");
-                        writer.print(model.getLegColor().getRed() + ";" + model.getLegColor().getGreen() + ";" + model.getLegColor().getBlue() + ";");
-                        writer.print(model.getPillowColor().getRed() + ";" + model.getPillowColor().getGreen() + ";" + model.getPillowColor().getBlue() + "\n");
+                        writer.print(model.getBaseColor().getRed() + ";" + model.getBaseColor().getGreen() + ";"
+                                + model.getBaseColor().getBlue() + ";");
+                        writer.print(model.getCushionColor().getRed() + ";" + model.getCushionColor().getGreen() + ";"
+                                + model.getCushionColor().getBlue() + ";");
+                        writer.print(model.getLegColor().getRed() + ";" + model.getLegColor().getGreen() + ";"
+                                + model.getLegColor().getBlue() + ";");
+                        writer.print(model.getPillowColor().getRed() + ";" + model.getPillowColor().getGreen() + ";"
+                                + model.getPillowColor().getBlue() + "\n");
 
                         writer.close();
-                        JOptionPane.showMessageDialog(parent, "Mentés sikeres!", "Mentés", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(parent, "Mentés sikeres!", "Mentés",
+                                JOptionPane.INFORMATION_MESSAGE);
 
                         dialog.dispose();
                     } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(parent, "Hiba a mentés közben:\n" + ex.getMessage(), "Hiba", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(parent, "Hiba a mentés közben:\n" + ex.getMessage(), "Hiba",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(parent, "Hiba a mentés közben:\n A fáljnév nem maradhat üressen.", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(parent, "Hiba a mentés közben:\n A fáljnév nem maradhat üressen.",
+                            "Hiba", JOptionPane.ERROR_MESSAGE);
                 }
             });
 
@@ -117,27 +124,38 @@ public class FileManager {
 
         loadButton.addActionListener(e -> {
             try {
-                File fileToLoad = new File(dropdown.getSelectedItem().toString()+".fotel");
+                File fileToLoad = new File(dropdown.getSelectedItem().toString() + ".fotel");
 
                 Scanner sc = new Scanner(fileToLoad);
                 String[] data = sc.nextLine().split(";");
                 model.setWidth(Integer.parseInt(data[0]));
                 model.setHeight(Integer.parseInt(data[1]));
                 model.setDepth(Integer.parseInt(data[2]));
-                model.setBaseColor(new Color(Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5])));
-                model.setCushionColor(new Color(Integer.parseInt(data[6]), Integer.parseInt(data[7]), Integer.parseInt(data[8])));
-                model.setLegColor(new Color(Integer.parseInt(data[9]), Integer.parseInt(data[10]), Integer.parseInt(data[11])));
-                model.setPillowColor(new Color(Integer.parseInt(data[12]), Integer.parseInt(data[13]), Integer.parseInt(data[14])));
+                model.setBaseColor(
+                        new Color(Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5])));
+                model.setCushionColor(
+                        new Color(Integer.parseInt(data[6]), Integer.parseInt(data[7]), Integer.parseInt(data[8])));
+                model.setLegColor(
+                        new Color(Integer.parseInt(data[9]), Integer.parseInt(data[10]), Integer.parseInt(data[11])));
+                model.setPillowColor(
+                        new Color(Integer.parseInt(data[12]), Integer.parseInt(data[13]), Integer.parseInt(data[14])));
 
                 JOptionPane.showMessageDialog(parent, "Betöltés sikeres!", "Betöltés", JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parent, "Hiba a betöltés közben:\n" + ex.getMessage(), "Hiba", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(parent, "Hiba a betöltés közben:\n" + ex.getMessage(), "Hiba",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
         returnButton.addActionListener(e -> frame.dispose());
 
+        if (dropdown.getItemCount() == 0) {
+            JOptionPane.showMessageDialog(parent, "Nincs betölthető modell!", "Figyelmeztetés",
+                    JOptionPane.WARNING_MESSAGE);
+            frame.dispose();
+            return;
+        }
         frame.setVisible(true);
     }
 
@@ -181,14 +199,15 @@ public class FileManager {
 
         deleteButton.addActionListener(e -> {
             try {
-                File fileToDelete = new File(dropdown.getSelectedItem().toString()+".fotel");
+                File fileToDelete = new File(dropdown.getSelectedItem().toString() + ".fotel");
 
                 fileToDelete.delete();
 
                 JOptionPane.showMessageDialog(parent, "Törlés sikeres!", "Törlés", JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parent, "Hiba a törlés közben:\n" + ex.getMessage(), "Hiba", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(parent, "Hiba a törlés közben:\n" + ex.getMessage(), "Hiba",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -197,13 +216,12 @@ public class FileManager {
         frame.setVisible(true);
     }
 
-
     public void saveToFile() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Mentés fájlba");
 
         int userSelection = fileChooser.showSaveDialog(parent);
-        if(userSelection == JFileChooser.APPROVE_OPTION) {
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
             try {
                 File fileToSave = fileChooser.getSelectedFile();
                 if (!fileToSave.getName().toLowerCase().endsWith(".fotel")) {
@@ -214,15 +232,20 @@ public class FileManager {
                 writer.print(model.getWidth() + ";");
                 writer.print(model.getHeight() + ";");
                 writer.print(model.getDepth() + ";");
-                writer.print(model.getBaseColor().getRed() + ";" + model.getBaseColor().getGreen() + ";" + model.getBaseColor().getBlue() + ";");
-                writer.print(model.getCushionColor().getRed() + ";" + model.getCushionColor().getGreen() + ";" + model.getCushionColor().getBlue() + ";");
-                writer.print(model.getLegColor().getRed() + ";" + model.getLegColor().getGreen() + ";" + model.getLegColor().getBlue() + ";");
-                writer.print(model.getPillowColor().getRed() + ";" + model.getPillowColor().getGreen() + ";" + model.getPillowColor().getBlue() + "\n");
+                writer.print(model.getBaseColor().getRed() + ";" + model.getBaseColor().getGreen() + ";"
+                        + model.getBaseColor().getBlue() + ";");
+                writer.print(model.getCushionColor().getRed() + ";" + model.getCushionColor().getGreen() + ";"
+                        + model.getCushionColor().getBlue() + ";");
+                writer.print(model.getLegColor().getRed() + ";" + model.getLegColor().getGreen() + ";"
+                        + model.getLegColor().getBlue() + ";");
+                writer.print(model.getPillowColor().getRed() + ";" + model.getPillowColor().getGreen() + ";"
+                        + model.getPillowColor().getBlue() + "\n");
 
                 writer.close();
                 JOptionPane.showMessageDialog(parent, "Mentés sikeres!", "Mentés", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parent, "Hiba a mentés közben:\n" + ex.getMessage(), "Hiba", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(parent, "Hiba a mentés közben:\n" + ex.getMessage(), "Hiba",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -243,14 +266,19 @@ public class FileManager {
                 model.setWidth(Integer.parseInt(data[0]));
                 model.setHeight(Integer.parseInt(data[1]));
                 model.setDepth(Integer.parseInt(data[2]));
-                model.setBaseColor(new Color(Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5])));
-                model.setCushionColor(new Color(Integer.parseInt(data[6]), Integer.parseInt(data[7]), Integer.parseInt(data[8])));
-                model.setLegColor(new Color(Integer.parseInt(data[9]), Integer.parseInt(data[10]), Integer.parseInt(data[11])));
-                model.setPillowColor(new Color(Integer.parseInt(data[12]), Integer.parseInt(data[13]), Integer.parseInt(data[14])));
+                model.setBaseColor(
+                        new Color(Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5])));
+                model.setCushionColor(
+                        new Color(Integer.parseInt(data[6]), Integer.parseInt(data[7]), Integer.parseInt(data[8])));
+                model.setLegColor(
+                        new Color(Integer.parseInt(data[9]), Integer.parseInt(data[10]), Integer.parseInt(data[11])));
+                model.setPillowColor(
+                        new Color(Integer.parseInt(data[12]), Integer.parseInt(data[13]), Integer.parseInt(data[14])));
 
                 JOptionPane.showMessageDialog(parent, "Betöltés sikeres!", "Betöltés", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parent, "Hiba a betöltés közben:\n" + ex.getMessage(), "Hiba", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(parent, "Hiba a betöltés közben:\n" + ex.getMessage(), "Hiba",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
