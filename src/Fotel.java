@@ -411,6 +411,11 @@ public class Fotel extends JFrame {
                         "[5] Párna szín Állítása.\n" +
                         "[6] Láb szín Állítása.\n" +
                         "[7] Díszpárna szín Állítása.\n" +
+                        "[8] Nézetek fókuszba helyezése \n"+
+                        "[8] -> [1] Elölnézet fókuszba helyezése \n"+
+                        "[8] -> [2] Oldalnézet fókuszba helyezése \n"+
+                        "[8] -> [3] Felülnézet fókuszba helyezése \n"+
+                        "[8] -> [0] Vissza szerkesztés módba \n" +
                         "[Ctrl + S] Fotel mentése helyileg.\n" +
                         "[Ctrl + Shift + S] Fotel mentése tetszőleges helyre.\n" +
                         "[Ctrl + O] Fotel betöltése.\n" +
