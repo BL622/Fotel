@@ -1,9 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class FileManager {
@@ -41,7 +39,7 @@ public class FileManager {
             dialog.setLocationRelativeTo(parent);
 
             // Save button action
-            saveButton.addActionListener(e -> {
+            saveButton.addActionListener(_ -> {
                 String filename = filenameField.getText().trim();
                 if (!filename.isEmpty()) {
                     File fileToSave = new File(filename);
@@ -50,21 +48,7 @@ public class FileManager {
                     }
                     try (PrintWriter writer = new PrintWriter(fileToSave)) {
 
-                        writer.print(model.getWidth() + ";");
-                        writer.print(model.getHeight() + ";");
-                        writer.print(model.getDepth() + ";");
-                        writer.print(model.getBaseColor().getRed() + ";" + model.getBaseColor().getGreen() + ";"
-                                + model.getBaseColor().getBlue() + ";");
-                        writer.print(model.getCushionColor().getRed() + ";" + model.getCushionColor().getGreen() + ";"
-                                + model.getCushionColor().getBlue() + ";");
-                        writer.print(model.getLegColor().getRed() + ";" + model.getLegColor().getGreen() + ";"
-                                + model.getLegColor().getBlue() + ";");
-                        writer.print(model.getPillowColor().getRed() + ";" + model.getPillowColor().getGreen() + ";"
-                                + model.getPillowColor().getBlue() + "\n");
-
-                        writer.close();
-                        JOptionPane.showMessageDialog(parent, "Mentés sikeres!", "Mentés",
-                                JOptionPane.INFORMATION_MESSAGE);
+                        writeToFile(writer);
 
                         dialog.dispose();
                     } catch (IOException ex) {
@@ -78,10 +62,28 @@ public class FileManager {
             });
 
             // Cancel button action
-            cancelButton.addActionListener(e -> dialog.dispose());
+            cancelButton.addActionListener(_ -> dialog.dispose());
 
             dialog.setVisible(true);
         });
+    }
+
+    private void writeToFile(PrintWriter writer) {
+        writer.print(model.getWidth() + ";");
+        writer.print(model.getHeight() + ";");
+        writer.print(model.getDepth() + ";");
+        writer.print(model.getBaseColor().getRed() + ";" + model.getBaseColor().getGreen() + ";"
+                + model.getBaseColor().getBlue() + ";");
+        writer.print(model.getCushionColor().getRed() + ";" + model.getCushionColor().getGreen() + ";"
+                + model.getCushionColor().getBlue() + ";");
+        writer.print(model.getLegColor().getRed() + ";" + model.getLegColor().getGreen() + ";"
+                + model.getLegColor().getBlue() + ";");
+        writer.print(model.getPillowColor().getRed() + ";" + model.getPillowColor().getGreen() + ";"
+                + model.getPillowColor().getBlue() + "\n");
+
+        writer.close();
+        JOptionPane.showMessageDialog(parent, "Mentés sikeres!", "Mentés",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void loadLocal() {
@@ -97,10 +99,11 @@ public class FileManager {
         JComboBox<String> dropdown = new JComboBox<>();
 
         // List .fotel files and add them to the dropdown
-        File[] fotelFiles = rootDir.listFiles((dir, name) -> name.endsWith(".fotel"));
+        File[] fotelFiles = rootDir.listFiles((_, name) -> name.endsWith(".fotel"));
         if (fotelFiles != null) {
             for (File file : fotelFiles) {
-                dropdown.addItem(file.getName().split(".fotel")[0]);
+                String baseName = file.getName().replaceFirst("\\.fotel$", "");
+                dropdown.addItem(baseName);
             }
         }
 
@@ -122,25 +125,11 @@ public class FileManager {
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
-        loadButton.addActionListener(e -> {
+        loadButton.addActionListener(_ -> {
             try {
-                File fileToLoad = new File(dropdown.getSelectedItem().toString() + ".fotel");
+                File fileToLoad = new File(Objects.requireNonNull(dropdown.getSelectedItem()) + ".fotel");
 
-                Scanner sc = new Scanner(fileToLoad);
-                String[] data = sc.nextLine().split(";");
-                model.setWidth(Integer.parseInt(data[0]));
-                model.setHeight(Integer.parseInt(data[1]));
-                model.setDepth(Integer.parseInt(data[2]));
-                model.setBaseColor(
-                        new Color(Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5])));
-                model.setCushionColor(
-                        new Color(Integer.parseInt(data[6]), Integer.parseInt(data[7]), Integer.parseInt(data[8])));
-                model.setLegColor(
-                        new Color(Integer.parseInt(data[9]), Integer.parseInt(data[10]), Integer.parseInt(data[11])));
-                model.setPillowColor(
-                        new Color(Integer.parseInt(data[12]), Integer.parseInt(data[13]), Integer.parseInt(data[14])));
-
-                JOptionPane.showMessageDialog(parent, "Betöltés sikeres!", "Betöltés", JOptionPane.INFORMATION_MESSAGE);
+                loadFromFile(fileToLoad);
                 frame.dispose();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(parent, "Hiba a betöltés közben:\n" + ex.getMessage(), "Hiba",
@@ -148,7 +137,7 @@ public class FileManager {
             }
         });
 
-        returnButton.addActionListener(e -> frame.dispose());
+        returnButton.addActionListener(_ -> frame.dispose());
 
         if (dropdown.getItemCount() == 0) {
             JOptionPane.showMessageDialog(parent, "Nincs betölthető modell!", "Figyelmeztetés",
@@ -157,6 +146,24 @@ public class FileManager {
             return;
         }
         frame.setVisible(true);
+    }
+
+    private void loadFromFile(File fileToLoad) throws FileNotFoundException {
+        try (Scanner sc = new Scanner(fileToLoad)) {
+            String[] data = sc.nextLine().split(";");
+            model.setWidth(Integer.parseInt(data[0]));
+            model.setHeight(Integer.parseInt(data[1]));
+            model.setDepth(Integer.parseInt(data[2]));
+            model.setBaseColor(
+                    new Color(Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5])));
+            model.setCushionColor(
+                    new Color(Integer.parseInt(data[6]), Integer.parseInt(data[7]), Integer.parseInt(data[8])));
+            model.setLegColor(
+                    new Color(Integer.parseInt(data[9]), Integer.parseInt(data[10]), Integer.parseInt(data[11])));
+            model.setPillowColor(
+                    new Color(Integer.parseInt(data[12]), Integer.parseInt(data[13]), Integer.parseInt(data[14])));
+        }
+        JOptionPane.showMessageDialog(parent, "Betöltés sikeres!", "Betöltés", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void deleteLocal() {
@@ -172,10 +179,11 @@ public class FileManager {
         JComboBox<String> dropdown = new JComboBox<>();
 
         // List .fotel files and add them to the dropdown
-        File[] fotelFiles = rootDir.listFiles((dir, name) -> name.endsWith(".fotel"));
+        File[] fotelFiles = rootDir.listFiles((_, name) -> name.endsWith(".fotel"));
         if (fotelFiles != null) {
             for (File file : fotelFiles) {
-                dropdown.addItem(file.getName().split(".fotel")[0]);
+                String baseName = file.getName().replaceFirst("\\.fotel$", "");
+                dropdown.addItem(baseName);
             }
         }
 
@@ -197,21 +205,28 @@ public class FileManager {
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
-        deleteButton.addActionListener(e -> {
+        deleteButton.addActionListener(_ -> {
             try {
-                File fileToDelete = new File(dropdown.getSelectedItem().toString() + ".fotel");
-
-                fileToDelete.delete();
-
-                JOptionPane.showMessageDialog(parent, "Törlés sikeres!", "Törlés", JOptionPane.INFORMATION_MESSAGE);
-                frame.dispose();
+                String selected = (String) dropdown.getSelectedItem();
+                if (selected == null) return;
+                File fileToDelete = new File(System.getProperty("user.dir"), selected + ".fotel");
+                boolean deleted = fileToDelete.delete();
+                if (deleted) {
+                    dropdown.removeItem(selected);
+                    JOptionPane.showMessageDialog(parent, "Törlés sikeres!", "Törlés", JOptionPane.INFORMATION_MESSAGE);
+                    if (dropdown.getItemCount() == 0) {
+                        frame.dispose();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(parent, "A fájl törlése nem sikerült!\nTeljes elérési út: " + fileToDelete.getAbsolutePath(), "Hiba", JOptionPane.ERROR_MESSAGE);
+                }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(parent, "Hiba a törlés közben:\n" + ex.getMessage(), "Hiba",
                         JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        returnButton.addActionListener(e -> frame.dispose());
+        returnButton.addActionListener(_ -> frame.dispose());
 
         frame.setVisible(true);
     }
@@ -229,20 +244,7 @@ public class FileManager {
                 }
                 PrintWriter writer = new PrintWriter(fileToSave);
 
-                writer.print(model.getWidth() + ";");
-                writer.print(model.getHeight() + ";");
-                writer.print(model.getDepth() + ";");
-                writer.print(model.getBaseColor().getRed() + ";" + model.getBaseColor().getGreen() + ";"
-                        + model.getBaseColor().getBlue() + ";");
-                writer.print(model.getCushionColor().getRed() + ";" + model.getCushionColor().getGreen() + ";"
-                        + model.getCushionColor().getBlue() + ";");
-                writer.print(model.getLegColor().getRed() + ";" + model.getLegColor().getGreen() + ";"
-                        + model.getLegColor().getBlue() + ";");
-                writer.print(model.getPillowColor().getRed() + ";" + model.getPillowColor().getGreen() + ";"
-                        + model.getPillowColor().getBlue() + "\n");
-
-                writer.close();
-                JOptionPane.showMessageDialog(parent, "Mentés sikeres!", "Mentés", JOptionPane.INFORMATION_MESSAGE);
+                writeToFile(writer);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(parent, "Hiba a mentés közben:\n" + ex.getMessage(), "Hiba",
                         JOptionPane.ERROR_MESSAGE);
@@ -261,21 +263,7 @@ public class FileManager {
                 if (!fileToLoad.getName().toLowerCase().endsWith(".fotel")) {
                     throw new Exception("A fájlnak .fotel kiterjesztésűnek kell lennie");
                 }
-                Scanner sc = new Scanner(fileToLoad);
-                String[] data = sc.nextLine().split(";");
-                model.setWidth(Integer.parseInt(data[0]));
-                model.setHeight(Integer.parseInt(data[1]));
-                model.setDepth(Integer.parseInt(data[2]));
-                model.setBaseColor(
-                        new Color(Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5])));
-                model.setCushionColor(
-                        new Color(Integer.parseInt(data[6]), Integer.parseInt(data[7]), Integer.parseInt(data[8])));
-                model.setLegColor(
-                        new Color(Integer.parseInt(data[9]), Integer.parseInt(data[10]), Integer.parseInt(data[11])));
-                model.setPillowColor(
-                        new Color(Integer.parseInt(data[12]), Integer.parseInt(data[13]), Integer.parseInt(data[14])));
-
-                JOptionPane.showMessageDialog(parent, "Betöltés sikeres!", "Betöltés", JOptionPane.INFORMATION_MESSAGE);
+                loadFromFile(fileToLoad);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(parent, "Hiba a betöltés közben:\n" + ex.getMessage(), "Hiba",
                         JOptionPane.ERROR_MESSAGE);
@@ -283,8 +271,4 @@ public class FileManager {
         }
     }
 
-    private static void openSavePanel(JFrame parent) {
-        // Create a custom panel
-
-    }
 }

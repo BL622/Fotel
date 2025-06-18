@@ -8,14 +8,22 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Fotel extends JFrame {
-    private ArmChairModel model;
+    private final ArmChairModel model;
     private JSlider widthSlider;
     private JSlider heightSlider;
     private JSlider depthSlider;
-    private List<JSlider> sliders = new ArrayList<>();
+    private final List<JSlider> sliders = new ArrayList<>();
     private int focusedSliderIndex = 0;
     public int setFocusOnView = 0;
     public int focusedViewIndex = 0;
+
+    static {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception _) {
+
+        }
+    }
 
     public Fotel() {
         model = new ArmChairModel();
@@ -138,25 +146,25 @@ public class Fotel extends JFrame {
         controlPanel.setBorder(BorderFactory.createTitledBorder("Váltás nézetek között"));
 
         JButton frontButton = new JButton("Elölnézet [1]");
-        frontButton.addActionListener(e -> {
+        frontButton.addActionListener(_ -> {
             focusedViewIndex = 0;
             updateView();
         });
 
         JButton sideButton = new JButton("Oldalnézet [2]");
-        sideButton.addActionListener(e -> {
+        sideButton.addActionListener(_ -> {
             focusedViewIndex = 1;
             updateView();
         });
 
         JButton topButton = new JButton("Felülnézet [3]");
-        topButton.addActionListener(e -> {
+        topButton.addActionListener(_ -> {
             focusedViewIndex = 2;
             updateView();
         });
 
         JButton backToNormal = new JButton("Vissza [0]");
-        backToNormal.addActionListener(e -> {
+        backToNormal.addActionListener(_ -> {
             setFocusOnView = 0;
             updateView();
         });
@@ -166,10 +174,33 @@ public class Fotel extends JFrame {
         controlPanel.add(sideButton);
         controlPanel.add(Box.createVerticalStrut(10));
         controlPanel.add(topButton);
-        controlPanel.add(Box.createVerticalStrut(20));
+        controlPanel.add(Box.createVerticalGlue());
+        backToNormal.setPreferredSize(new Dimension(250, 40));
+        backToNormal.setMaximumSize(new Dimension(250, 40));
+        backToNormal.setMinimumSize(new Dimension(250, 40));
+        backToNormal.setAlignmentX(JButton.CENTER_ALIGNMENT);
+        backToNormal.setBackground(new Color(220, 53, 69));
+        backToNormal.setForeground(Color.BLACK);
+        backToNormal.setFont(backToNormal.getFont().deriveFont(Font.BOLD, 16f));
+        backToNormal.setFocusPainted(false);
+        backToNormal.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(220, 53, 69), 2, true),
+            BorderFactory.createEmptyBorder(8, 16, 8, 16)));
         controlPanel.add(backToNormal);
 
         add(controlPanel, BorderLayout.WEST);
+
+
+        int panelWidth = controlPanel.getPreferredSize().width;
+        for (Component comp : controlPanel.getComponents()) {
+            if (comp instanceof JButton) {
+                Dimension buttonSize = new Dimension(panelWidth, comp.getPreferredSize().height);
+                comp.setPreferredSize(buttonSize);
+                comp.setMaximumSize(buttonSize);
+                comp.setMinimumSize(buttonSize);
+                ((JButton)comp).setAlignmentX(Component.CENTER_ALIGNMENT);
+            }
+        }
 
         setSize(1000, 700);
         setLocationRelativeTo(null);
@@ -189,21 +220,30 @@ public class Fotel extends JFrame {
         heightSlider = new JSlider(160, 250, model.getHeight());
         depthSlider = new JSlider(160, 240, model.getDepth());
 
+
+        try {
+            widthSlider.setUI((javax.swing.plaf.SliderUI)Class.forName("com.sun.java.swing.plaf.windows.WindowsSliderUI").getConstructor(javax.swing.JSlider.class).newInstance(widthSlider));
+            heightSlider.setUI((javax.swing.plaf.SliderUI)Class.forName("com.sun.java.swing.plaf.windows.WindowsSliderUI").getConstructor(javax.swing.JSlider.class).newInstance(heightSlider));
+            depthSlider.setUI((javax.swing.plaf.SliderUI)Class.forName("com.sun.java.swing.plaf.windows.WindowsSliderUI").getConstructor(javax.swing.JSlider.class).newInstance(depthSlider));
+        } catch (Exception _) {
+
+        }
+
         widthSlider.setBorder(BorderFactory.createTitledBorder("Szélesség [1]"));
         heightSlider.setBorder(BorderFactory.createTitledBorder("Magasság [2]"));
         depthSlider.setBorder(BorderFactory.createTitledBorder("Mélység [3]"));
 
-        widthSlider.addChangeListener(e -> {
+        widthSlider.addChangeListener(_ -> {
             model.setWidth(widthSlider.getValue());
             repaint();
         });
 
-        heightSlider.addChangeListener(e -> {
+        heightSlider.addChangeListener(_ -> {
             model.setHeight(heightSlider.getValue());
             repaint();
         });
 
-        depthSlider.addChangeListener(e -> {
+        depthSlider.addChangeListener(_ -> {
             model.setDepth(depthSlider.getValue());
             repaint();
         });
@@ -217,41 +257,70 @@ public class Fotel extends JFrame {
         controlPanel.add(heightSlider);
         controlPanel.add(depthSlider);
 
-        // Add to sliders list
+
         sliders.clear();
         sliders.add(widthSlider);
         sliders.add(heightSlider);
         sliders.add(depthSlider);
 
-        // Set initial focus
+
         updateSliderFocusVisual();
 
         // Color pickers
         addColorButton(controlPanel, "Alapszín [4]", model.getBaseColor(),
-                color -> model.setBaseColor(color));
+            model::setBaseColor);
+        controlPanel.add(Box.createVerticalStrut(10));
         addColorButton(controlPanel, "Párna szín [5]", model.getCushionColor(),
-                color -> model.setCushionColor(color));
+            model::setCushionColor);
+        controlPanel.add(Box.createVerticalStrut(10));
         addColorButton(controlPanel, "Láb szín [6]", model.getLegColor(),
-                color -> model.setLegColor(color));
+            model::setLegColor);
+        controlPanel.add(Box.createVerticalStrut(10));
         addColorButton(controlPanel, "Díszpárna szín [7]", model.getPillowColor(),
-                color -> model.setPillowColor(color));
+            model::setPillowColor);
+        controlPanel.add(Box.createVerticalGlue());
 
         JButton addFocusButton = new JButton("Fókusz [8]");
-        addFocusButton.addActionListener(e -> {
+        addFocusButton.setPreferredSize(new Dimension(250, 40));
+        addFocusButton.setMaximumSize(new Dimension(250, 40));
+        addFocusButton.setMinimumSize(new Dimension(250, 40));
+        addFocusButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
+        addFocusButton.setBackground(new Color(0, 120, 215));
+        addFocusButton.setForeground(Color.BLACK);
+        addFocusButton.setFont(addFocusButton.getFont().deriveFont(Font.BOLD, 16f));
+        addFocusButton.setFocusPainted(false);
+        addFocusButton.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0, 120, 215), 2, true),
+            BorderFactory.createEmptyBorder(8, 16, 8, 16)));
+        addFocusButton.addActionListener(_ -> {
             setFocusOnView = 1;
             updateView();
         });
-
         controlPanel.add(addFocusButton);
 
         return controlPanel;
     }
 
 
+    private void styleSidePanelButton(JButton button) {
+        int width = 250;
+        int height = 20;
+        button.setPreferredSize(new Dimension(width, height));
+        button.setMaximumSize(new Dimension(width, height));
+        button.setMinimumSize(new Dimension(width, height));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setFocusPainted(false);
+    }
+
     private void addColorButton(JPanel panel, String text, Color currentColor, Consumer<Color> colorConsumer) {
         JButton button = new JButton(text);
-        button.addActionListener(e -> {
-            JColorChooser colorChooser = new JColorChooser(currentColor);
+        styleSidePanelButton(button);
+        button.addActionListener(_ -> colorChooser(currentColor, colorConsumer, text + "színt"));
+        panel.add(button);
+    }
+
+    public void colorChooser(Color currentColor, Consumer<Color> colorConsumer, String text) {
+        JColorChooser colorChooser = new JColorChooser(currentColor);
 
             AbstractColorChooserPanel[] panels = colorChooser.getChooserPanels();
             for (AbstractColorChooserPanel p : panels) {
@@ -264,10 +333,10 @@ public class Fotel extends JFrame {
 
             JDialog dialog = JColorChooser.createDialog(
                     this,
-                    "Válassz színt",
+                    "Válassz" + text,
                     true,
                     colorChooser,
-                    ev -> {
+                _ -> {
                         Color chosen = colorChooser.getColor();
                         if (chosen != null) {
                             colorConsumer.accept(chosen);
@@ -281,8 +350,6 @@ public class Fotel extends JFrame {
             dialog.setSize(600, 400);
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
-        });
-        panel.add(button);
     }
 
     private void setupFocusHandling() {
@@ -328,30 +395,22 @@ public class Fotel extends JFrame {
 
     public void increaseFocusedSlider() {
         JSlider slider = getFocusedSlider();
-        SwingUtilities.invokeLater(() -> {
-            slider.setValue(Math.min(slider.getValue() + 1, slider.getMaximum()));
-        });
+        SwingUtilities.invokeLater(() -> slider.setValue(Math.min(slider.getValue() + 1, slider.getMaximum())));
     }
 
     public void decreaseFocusedSlider() {
         JSlider slider = getFocusedSlider();
-        SwingUtilities.invokeLater(() -> {
-            slider.setValue(Math.max(slider.getValue() - 1, slider.getMinimum()));
-        });
+        SwingUtilities.invokeLater(() -> slider.setValue(Math.max(slider.getValue() - 1, slider.getMinimum())));
     }
 
     public void largeIncreaseFocusedSlider() {
         JSlider slider = getFocusedSlider();
-        SwingUtilities.invokeLater(() -> {
-            slider.setValue(Math.min(slider.getValue() + 10, slider.getMaximum()));
-        });
+        SwingUtilities.invokeLater(() -> slider.setValue(Math.min(slider.getValue() + 10, slider.getMaximum())));
     }
 
     public void largeDecreaseFocusedSlider() {
         JSlider slider = getFocusedSlider();
-        SwingUtilities.invokeLater(() -> {
-            slider.setValue(Math.max(slider.getValue() - 10, slider.getMinimum()));
-        });
+        SwingUtilities.invokeLater(() -> slider.setValue(Math.max(slider.getValue() - 10, slider.getMinimum())));
     }
 
     public void updateSliders() {
@@ -360,81 +419,60 @@ public class Fotel extends JFrame {
         depthSlider.setValue(model.getDepth());
     }
 
-    public void openColorChooser(String text, Color currentColor, Consumer<Color> colorConsumer) {
-
-        JColorChooser colorChooser = new JColorChooser(currentColor);
-
-        AbstractColorChooserPanel[] panels = colorChooser.getChooserPanels();
-        for (AbstractColorChooserPanel p : panels) {
-            if (!p.getDisplayName().equals("Swatches") && !p.getDisplayName().equals("RGB")) {
-                colorChooser.removeChooserPanel(p);
-            }
-        }
-
-        colorChooser.setPreviewPanel(new JPanel());
-
-        JDialog dialog = JColorChooser.createDialog(
-                this,
-                "Válassz " + text,
-                true,
-                colorChooser,
-                ev -> {
-                    Color chosen = colorChooser.getColor();
-                    if (chosen != null) {
-                        colorConsumer.accept(chosen);
-                        repaint();
-                    }
-                },
-                null
-        );
-
-        colorChooser.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
-        dialog.setSize(600, 400);
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-    }
-
     public static void help() {
         JFrame helpWindow = new JFrame("Súgó");
-        helpWindow.setSize(600, 400);
-        helpWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Only close this window
+        helpWindow.setSize(650, 500);
+        helpWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Create content for the help window
-        JTextArea helpText = new JTextArea(
-                "Névjegy:\n" +
-                        "Készítette:\nBalics Attila Ádám - Z58T3N\nBalogh Levente HOAFBT\n\n\n" +
-                        "Használati útmutató:\n" +
-                        "[1] Szélesség állítása a Fel-Le, Jobb-Bal nyilakkal. illetve ugyan ezek a Shift + Fel-Le, Jobb-Bal nyilakkal nagyobb lépéselhez.\n" +
-                        "[2] Magasság állítása a Fel-Le, Jobb-Bal nyilakkal. illetve ugyan ezek a Shift + Fel-Le, Jobb-Bal nyilakkal nagyobb lépéselhez.\n" +
-                        "[3] Mélység állítása a Fel-Le, Jobb-Bal nyilakkal. illetve ugyan ezek a Shift + Fel-Le, Jobb-Bal nyilakkal nagyobb lépéselhez.\n" +
-                        "[4] Alapszín Állítása.\n" +
-                        "[5] Párna szín Állítása.\n" +
-                        "[6] Láb szín Állítása.\n" +
-                        "[7] Díszpárna szín Állítása.\n" +
-                        "[8] Nézetek fókuszba helyezése \n"+
-                        "[8] -> [1] Elölnézet fókuszba helyezése \n"+
-                        "[8] -> [2] Oldalnézet fókuszba helyezése \n"+
-                        "[8] -> [3] Felülnézet fókuszba helyezése \n"+
-                        "[8] -> [0] Vissza szerkesztés módba \n" +
-                        "[Ctrl + S] Fotel mentése helyileg.\n" +
-                        "[Ctrl + Shift + S] Fotel mentése tetszőleges helyre.\n" +
-                        "[Ctrl + O] Fotel betöltése.\n" +
-                        "[Ctrl + Shift + O] Fotel betöltése tetszőleges helyről.\n"+
-                        "[Ctrl + Del] Fotel törlése.\n"+
-                        "[Ctrl + Z] Fotel randomizálása szín szerint.\n" +
-                        "[Ctrl + T] Fotel randomizálása méret szerint.\n" +
-                        "[Ctrl + R] Fotel randomizálása minden szerint.\n" +
-                        "[Ctrl + H] Súgó."
+        // Use JTextPane for richer formatting
+        JTextPane helpText = new JTextPane();
+        helpText.setContentType("text/html");
+        helpText.setText(
+            """
+            <html><body style='font-family:sans-serif; font-size:13px;'>
+            <h2>Névjegy</h2>
+            <b>Készítette:</b><br>
+            Balics Attila Ádám - Z58T3N<br>
+            Balogh Levente HOAFBT<br><br>
+            <h2>Használati útmutató</h2>
+            <ul>
+                <li><b>[1]</b> Szélesség állítása a Fel-Le, Jobb-Bal nyilakkal, Shift-tel nagyobb lépés.</li>
+                <li><b>[2]</b> Magasság állítása a Fel-Le, Jobb-Bal nyilakkal, Shift-tel nagyobb lépés.</li>
+                <li><b>[3]</b> Mélység állítása a Fel-Le, Jobb-Bal nyilakkal, Shift-tel nagyobb lépés.</li>
+                <li><b>[4]</b> Alapszín állítása.</li>
+                <li><b>[5]</b> Párna szín állítása.</li>
+                <li><b>[6]</b> Láb szín állítása.</li>
+                <li><b>[7]</b> Díszpárna szín állítása.</li>
+                <li><b>[8]</b> Nézetek fókuszba helyezése</li>
+                <ul>
+                    <li><b>[1]</b> Elölnézet fókuszba helyezése</li>
+                    <li><b>[2]</b> Oldalnézet fókuszba helyezése</li>
+                    <li><b>[3]</b> Felülnézet fókuszba helyezése</li>
+                    <li><b>[0]</b> Vissza szerkesztés módba</li>
+                </ul>
+            </ul>
+            <h2>Gyorsbillentyűk</h2>
+            <ul>
+                <li><b>Ctrl + S</b> Fotel mentése helyileg</li>
+                <li><b>Ctrl + Shift + S</b> Fotel mentése tetszőleges helyre</li>
+                <li><b>Ctrl + O</b> Fotel betöltése</li>
+                <li><b>Ctrl + Shift + O</b> Fotel betöltése tetszőleges helyről</li>
+                <li><b>Ctrl + Del</b> Fotel törlése</li>
+                <li><b>Ctrl + Z</b> Fotel randomizálása szín szerint</li>
+                <li><b>Ctrl + T</b> Fotel randomizálása méret szerint</li>
+                <li><b>Ctrl + R</b> Fotel randomizálása minden szerint</li>
+                <li><b>Ctrl + H</b> Súgó</li>
+                <li><b>Alt + F</b> Fájl menü megnyitása</li>
+                <li><b>Alt + V</b> Nézet menü megnyitása</li>
+            </ul>
+            </body></html>
+            """
         );
-        helpText.setWrapStyleWord(true);
-        helpText.setLineWrap(true);
         helpText.setEditable(false);
+        helpText.setCaretPosition(0);
         helpText.setMargin(new Insets(10, 10, 10, 10));
 
-        // Add to scroll pane and frame
         helpWindow.add(new JScrollPane(helpText));
-
-        // Show the window
         helpWindow.setVisible(true);
     }
 }

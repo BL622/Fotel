@@ -2,11 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class ArmChairViewPanel extends JPanel {
-    private final String title;
     protected final ArmChairModel model;
 
     public ArmChairViewPanel(String title, ArmChairModel model) {
-        this.title = title;
         this.model = model;
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createTitledBorder(title));
@@ -137,7 +135,7 @@ public abstract class ArmChairViewPanel extends JPanel {
                         + (armWidth * sideHeight * depth) * 2
                         + (insideWidth * (height - legHeight) * armWidth)
                         + (5 * 5 * Math.PI * legHeight) * 4
-                        + ((height / 4)*armWidth*(insideWidth-10)));
+                        + (float)((height / 4)*armWidth*(insideWidth-10)));
 
         g.setFont(new Font("default", Font.PLAIN, 12));
         g.drawString((float)width/200 + " m", 200, 40);

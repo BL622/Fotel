@@ -5,8 +5,6 @@ public class ArmChairModel {
     private int width;
     private int height;
     private int depth;
-    private final int armWidth = 20;
-    private final int legHeight = 20;
     private Color baseColor;
     private Color cushionColor;
     private Color legColor;
@@ -35,8 +33,10 @@ public class ArmChairModel {
     public int getWidth() {return width;}
     public int getHeight() {return height;}
     public int getDepth() {return depth;}
-    public int getArmWidth() {return armWidth;}
-    public int getLegHeight() {return legHeight;}
+    public int getArmWidth() {
+        return 20;}
+    public int getLegHeight() {
+        return 20;}
     public Color getBaseColor() {return baseColor;}
     public Color getCushionColor() {return cushionColor;}
     public Color getLegColor() {return legColor;}

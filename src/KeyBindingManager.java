@@ -32,9 +32,7 @@ public class KeyBindingManager {
 
         addKeyBinding(inputMap, actionMap, "deleteAction",
                 KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.CTRL_DOWN_MASK),
-                () -> {
-                    new FileManager(parent, model).deleteLocal();
-                });
+                () -> new FileManager(parent, model).deleteLocal());
 
         addKeyBinding(inputMap, actionMap, "saveOutAction",
                 KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK),
@@ -79,13 +77,11 @@ public class KeyBindingManager {
                 () -> System.exit(0));
 
         addKeyBinding(inputMap, actionMap, "help",
-                KeyStroke.getKeyStroke(KeyEvent.VK_H,KeyEvent.CTRL_DOWN_MASK),
-                () -> parent.help());
+                KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.CTRL_DOWN_MASK),
+                Fotel::help);
 
 
-
-
-        switch (parent.setFocusOnView){
+        switch (parent.setFocusOnView) {
             case 0:
                 normalViewKeyBindings(inputMap, actionMap);
                 break;
@@ -96,6 +92,27 @@ public class KeyBindingManager {
         }
 
 
+        
+        addKeyBinding(inputMap, actionMap, "openFileMenu",
+                KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.ALT_DOWN_MASK),
+                () -> {
+                    JMenuBar menuBar = parent.getJMenuBar();
+                    if (menuBar != null && menuBar.getMenuCount() > 0) {
+                        JMenu fileMenu = menuBar.getMenu(0);
+                        fileMenu.doClick();
+                    }
+                });
+
+        
+        addKeyBinding(inputMap, actionMap, "openViewMenu",
+                KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.ALT_DOWN_MASK),
+                () -> {
+                    JMenuBar menuBar = parent.getJMenuBar();
+                    if (menuBar != null && menuBar.getMenuCount() > 1) {
+                        JMenu viewMenu = menuBar.getMenu(1);
+                        viewMenu.doClick();
+                    }
+                });
     }
 
     private void normalViewKeyBindings(InputMap inputMap, ActionMap actionMap) {
@@ -112,76 +129,73 @@ public class KeyBindingManager {
                 KeyStroke.getKeyStroke(KeyEvent.VK_3, 0),
                 () -> parent.setFocusedSlider(2));
 
-        addArrowKeyBinding(inputMap, actionMap, KeyEvent.VK_RIGHT, parent::increaseFocusedSlider);
-        addArrowKeyBinding(inputMap, actionMap, KeyEvent.VK_LEFT, parent::decreaseFocusedSlider);
-        addArrowKeyBinding(inputMap, actionMap, KeyEvent.VK_UP, parent::increaseFocusedSlider);
-        addArrowKeyBinding(inputMap, actionMap, KeyEvent.VK_DOWN, parent::decreaseFocusedSlider);
-
-        // Shift-modified arrow keys
-        addArrowKeyBinding(inputMap, actionMap, KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK, parent::largeIncreaseFocusedSlider);
-        addArrowKeyBinding(inputMap, actionMap, KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK, parent::largeDecreaseFocusedSlider);
-        addArrowKeyBinding(inputMap, actionMap, KeyEvent.VK_UP, InputEvent.SHIFT_DOWN_MASK, parent::largeIncreaseFocusedSlider);
-        addArrowKeyBinding(inputMap, actionMap, KeyEvent.VK_DOWN, InputEvent.SHIFT_DOWN_MASK, parent::largeDecreaseFocusedSlider);
+        
+        addKeyBinding(inputMap, actionMap, "arrow_right", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), parent::increaseFocusedSlider);
+        addKeyBinding(inputMap, actionMap, "arrow_left", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), parent::decreaseFocusedSlider);
+        addKeyBinding(inputMap, actionMap, "arrow_up", KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), parent::increaseFocusedSlider);
+        addKeyBinding(inputMap, actionMap, "arrow_down", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), parent::decreaseFocusedSlider);
+        addKeyBinding(inputMap, actionMap, "arrow_right_mod", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK), parent::largeIncreaseFocusedSlider);
+        addKeyBinding(inputMap, actionMap, "arrow_left_mod", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK), parent::largeDecreaseFocusedSlider);
+        addKeyBinding(inputMap, actionMap, "arrow_up_mod", KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.SHIFT_DOWN_MASK), parent::largeIncreaseFocusedSlider);
+        addKeyBinding(inputMap, actionMap, "arrow_down_mod", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.SHIFT_DOWN_MASK), parent::largeDecreaseFocusedSlider);
 
         addKeyBinding(inputMap, actionMap, "openBaseColor",
                 KeyStroke.getKeyStroke(KeyEvent.VK_4, 0),
-                ()->{
-                    parent.openColorChooser("alapszínt", model.getBaseColor(), color -> model.setBaseColor(color));
-                });
-        addKeyBinding(inputMap, actionMap, "openCushionColor",
-                KeyStroke.getKeyStroke(KeyEvent.VK_5, 0),
-                ()->{
-                    parent.openColorChooser("párna színt", model.getCushionColor(), color -> model.setCushionColor(color));
-                });
+                () -> parent.colorChooser(model.getBaseColor(), model::setBaseColor, "alapszínt"));
+        addKeyBinding(inputMap, actionMap, "openCushionColor",KeyStroke.getKeyStroke(KeyEvent.VK_5, 0),
+                () -> parent.colorChooser(model.getCushionColor(), model::setCushionColor, "párna színt"));
         addKeyBinding(inputMap, actionMap, "openLegColor",
                 KeyStroke.getKeyStroke(KeyEvent.VK_6, 0),
-                ()->{
-                    parent.openColorChooser("láb színt", model.getLegColor(), color -> model.setLegColor(color));
-                });
+                () -> parent.colorChooser(model.getLegColor(), model::setLegColor, "láb színt"));
         addKeyBinding(inputMap, actionMap, "openPillowColor",
                 KeyStroke.getKeyStroke(KeyEvent.VK_7, 0),
-                ()->{
-                    parent.openColorChooser("díszpárna színt", model.getPillowColor(), color -> model.setPillowColor(color));
-                });
+                () -> parent.colorChooser(model.getPillowColor(), model::setPillowColor, "díszpárna színt"));
 
         addKeyBinding(inputMap, actionMap, "changeToFocusedView",
                 KeyStroke.getKeyStroke(KeyEvent.VK_8, 0),
-                () ->{parent.setFocusOnView = 1;
+                () -> {
+                    parent.setFocusOnView = 1;
                     parent.updateView();
                 });
     }
 
     private void focusViewKeyBindings(InputMap inputMap, ActionMap actionMap) {
+        
         addKeyBinding(inputMap, actionMap, "setFocusOnFrontView",
                 KeyStroke.getKeyStroke(KeyEvent.VK_1, 0),
-                () ->{parent.focusedViewIndex = 0;
+                () -> {
+                    parent.focusedViewIndex = 0;
                     parent.updateView();
                 });
         addKeyBinding(inputMap, actionMap, "setFocusOnSideView",
                 KeyStroke.getKeyStroke(KeyEvent.VK_2, 0),
-                () -> {parent.focusedViewIndex = 1;
+                () -> {
+                    parent.focusedViewIndex = 1;
                     parent.updateView();
                 });
         addKeyBinding(inputMap, actionMap, "setFocusOnTopView",
                 KeyStroke.getKeyStroke(KeyEvent.VK_3, 0),
-                () -> {parent.focusedViewIndex = 2;
-                        parent.updateView();
-                        });
-        addKeyBinding(inputMap, actionMap, "changeToNormalView",
-                KeyStroke.getKeyStroke(KeyEvent.VK_0, 0),
-                () ->{parent.setFocusOnView = 0;
+                () -> {
+                    parent.focusedViewIndex = 2;
                     parent.updateView();
                 });
-
+        addKeyBinding(inputMap, actionMap, "changeToNormalView",
+                KeyStroke.getKeyStroke(KeyEvent.VK_0, 0),
+                () -> {
+                    parent.setFocusOnView = 0;
+                    parent.updateView();
+                });
+        
+        addKeyBinding(inputMap, actionMap, "arrow_right", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), () -> {});
+        addKeyBinding(inputMap, actionMap, "arrow_left", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), () -> {});
+        addKeyBinding(inputMap, actionMap, "arrow_up", KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), () -> {});
+        addKeyBinding(inputMap, actionMap, "arrow_down", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), () -> {});
+        addKeyBinding(inputMap, actionMap, "arrow_right_mod", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK), () -> {});
+        addKeyBinding(inputMap, actionMap, "arrow_left_mod", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK), () -> {});
+        addKeyBinding(inputMap, actionMap, "arrow_up_mod", KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.SHIFT_DOWN_MASK), () -> {});
+        addKeyBinding(inputMap, actionMap, "arrow_down_mod", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.SHIFT_DOWN_MASK), () -> {});
     }
 
-    private void addArrowKeyBinding(InputMap inputMap, ActionMap actionMap, int keyCode, Runnable action) {
-        addKeyBinding(inputMap, actionMap, "arrow_" + keyCode, KeyStroke.getKeyStroke(keyCode, 0), action);
-    }
-
-    private void addArrowKeyBinding(InputMap inputMap, ActionMap actionMap, int keyCode, int modifiers, Runnable action) {
-        addKeyBinding(inputMap, actionMap, "arrow_" + keyCode + "_mod", KeyStroke.getKeyStroke(keyCode, modifiers), action);
-    }
 
     private void addKeyBinding(InputMap inputMap, ActionMap actionMap,
                                String name, KeyStroke keyStroke, Runnable action) {
