@@ -421,51 +421,58 @@ public class Fotel extends JFrame {
 
     public static void help() {
         JFrame helpWindow = new JFrame("Súgó");
-        helpWindow.setSize(650, 500);
+        helpWindow.setSize(800, 540);
         helpWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        try {
+            helpWindow.setIconImage(new ImageIcon("icons/help.png").getImage());
+        } catch (Exception _) {
+            // Ignore if icon not found
+        }
 
-        // Use JTextPane for richer formatting
         JTextPane helpText = new JTextPane();
         helpText.setContentType("text/html");
         helpText.setText(
             """
-            <html><body style='font-family:sans-serif; font-size:13px;'>
-            <h2>Névjegy</h2>
-            <b>Készítette:</b><br>
-            Balics Attila Ádám - Z58T3N<br>
-            Balogh Levente HOAFBT<br><br>
-            <h2>Használati útmutató</h2>
-            <ul>
-                <li><b>[1]</b> Szélesség állítása a Fel-Le, Jobb-Bal nyilakkal, Shift-tel nagyobb lépés.</li>
-                <li><b>[2]</b> Magasság állítása a Fel-Le, Jobb-Bal nyilakkal, Shift-tel nagyobb lépés.</li>
-                <li><b>[3]</b> Mélység állítása a Fel-Le, Jobb-Bal nyilakkal, Shift-tel nagyobb lépés.</li>
+            <html><body style='font-family:sans-serif; font-size:15px; background:#f8f9fa; color:#222; padding:18px;'>
+            <div style='border-radius:12px; border:1px solid #d1d5db; background:#fff; box-shadow:0 2px 8px #0001; padding:24px;'>
+            <h1 style='color:#1976d2; margin-top:0;'>Fotel Súgó</h1>
+            <h2 style='color:#388e3c;'>Névjegy</h2>
+            <b>Készítette:</b><br>Balics Attila Ádám - Z58T3N<br>Balogh Levente HOAFBT<br><br>
+            <h2 style='color:#388e3c;'>Használati útmutató</h2>
+            <ul style='margin-bottom:0.5em;'>
+                <li><b>[1]</b> Szélesség állítása a Fel-Le, Jobb-Bal nyilakkal, <b>Shift</b>-tel nagyobb lépés.</li>
+                <li><b>[2]</b> Magasság állítása a Fel-Le, Jobb-Bal nyilakkal, <b>Shift</b>-tel nagyobb lépés.</li>
+                <li><b>[3]</b> Mélység állítása a Fel-Le, Jobb-Bal nyilakkal, <b>Shift</b>-tel nagyobb lépés.</li>
                 <li><b>[4]</b> Alapszín állítása.</li>
                 <li><b>[5]</b> Párna szín állítása.</li>
                 <li><b>[6]</b> Láb szín állítása.</li>
                 <li><b>[7]</b> Díszpárna szín állítása.</li>
-                <li><b>[8]</b> Nézetek fókuszba helyezése</li>
-                <ul>
-                    <li><b>[1]</b> Elölnézet fókuszba helyezése</li>
-                    <li><b>[2]</b> Oldalnézet fókuszba helyezése</li>
-                    <li><b>[3]</b> Felülnézet fókuszba helyezése</li>
-                    <li><b>[0]</b> Vissza szerkesztés módba</li>
-                </ul>
+                <li><b>[8]</b> Nézetek fókuszba helyezése
+                    <ul>
+                        <li><b>[1]</b> Elölnézet fókuszba helyezése</li>
+                        <li><b>[2]</b> Oldalnézet fókuszba helyezése</li>
+                        <li><b>[3]</b> Felülnézet fókuszba helyezése</li>
+                        <li><b>[0]</b> Vissza szerkesztés módba</li>
+                    </ul>
+                </li>
             </ul>
-            <h2>Gyorsbillentyűk</h2>
-            <ul>
-                <li><b>Ctrl + S</b> Fotel mentése helyileg</li>
-                <li><b>Ctrl + Shift + S</b> Fotel mentése tetszőleges helyre</li>
-                <li><b>Ctrl + O</b> Fotel betöltése</li>
-                <li><b>Ctrl + Shift + O</b> Fotel betöltése tetszőleges helyről</li>
-                <li><b>Ctrl + Del</b> Fotel törlése</li>
-                <li><b>Ctrl + Z</b> Fotel randomizálása szín szerint</li>
-                <li><b>Ctrl + T</b> Fotel randomizálása méret szerint</li>
-                <li><b>Ctrl + R</b> Fotel randomizálása minden szerint</li>
-                <li><b>Ctrl + H</b> Súgó</li>
-                <li><b>Alt + F</b> Fájl menü megnyitása</li>
-                <li><b>Alt + V</b> Nézet menü megnyitása</li>
+            <h2 style='color:#388e3c;'>Gyorsbillentyűk</h2>
+            <ul style='margin-bottom:0.5em;'>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Ctrl + S</span> Fotel mentése helyileg</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Ctrl + Shift + S</span> Fotel mentése tetszőleges helyre</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Ctrl + O</span> Fotel betöltése</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Ctrl + Shift + O</span> Fotel betöltése tetszőleges helyről</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Ctrl + Del</span> Fotel törlése</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Ctrl + Z</span> Fotel randomizálása szín szerint</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Ctrl + T</span> Fotel randomizálása méret szerint</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Ctrl + R</span> Fotel randomizálása minden szerint</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Ctrl + H</span> Súgó</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Alt + F</span> Fájl menü megnyitása</li>
+                <li><span style='font-family:monospace; background:#e3f2fd; padding:2px 6px; border-radius:5px;'>Alt + V</span> Nézet menü megnyitása</li>
             </ul>
-            </body></html>
+            <div style='text-align:right; color:#888; font-size:12px; margin-top:2em;'>© 2025 Fotel</div>
+            </div></body></html>
             """
         );
         helpText.setEditable(false);
