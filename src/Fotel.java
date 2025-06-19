@@ -6,6 +6,7 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.prefs.Preferences;
 
 public class Fotel extends JFrame {
     private final ArmChairModel model;
@@ -32,7 +33,7 @@ public class Fotel extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Create menu
+        
         MenuBuilder menuBuilder = new MenuBuilder(this, model);
         setJMenuBar(menuBuilder.buildMenuBar());
 
@@ -44,6 +45,8 @@ public class Fotel extends JFrame {
                 focusViewMenu();
                 break;
         }
+
+        showStartupDialog();
     }
 
     public void updateView() {
@@ -65,10 +68,10 @@ public class Fotel extends JFrame {
 
 
     private void normalViewMenu(){
-        // Control Panel
+        
         JPanel controlPanel = createControlPanel();
         add(controlPanel, BorderLayout.WEST);
-        // Views
+        
         JPanel gridPanel = new JPanel(new GridLayout(2, 2));
         gridPanel.add(new ArmChairViewPanel("Elölnézet", model) {
             @Override
@@ -103,14 +106,14 @@ public class Fotel extends JFrame {
         setSize(1000, 700);
         setLocationRelativeTo(null);
 
-        // Focus setup
+        
         setupFocusHandling();
         getContentPane().setFocusable(true);
         getContentPane().requestFocusInWindow();
 
         setVisible(true);
 
-        // Setup key bindings
+        
         new KeyBindingManager(this, model).setupKeyBindings();
     }
 
@@ -139,7 +142,7 @@ public class Fotel extends JFrame {
         gridPanel.add(viewPanel);
         add(gridPanel, BorderLayout.CENTER);
 
-        // Control Panel on the left
+        
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
         controlPanel.setPreferredSize(new Dimension(200, 0));
@@ -215,7 +218,7 @@ public class Fotel extends JFrame {
         controlPanel.setPreferredSize(new Dimension(250, 0));
         controlPanel.setFocusable(false);
 
-        // Sliders
+        
         widthSlider = new JSlider(160, 300, model.getWidth());
         heightSlider = new JSlider(160, 250, model.getHeight());
         depthSlider = new JSlider(160, 240, model.getDepth());
@@ -248,7 +251,7 @@ public class Fotel extends JFrame {
             repaint();
         });
 
-        // Disable focus for sliders
+        
         widthSlider.setFocusable(false);
         heightSlider.setFocusable(false);
         depthSlider.setFocusable(false);
@@ -266,7 +269,7 @@ public class Fotel extends JFrame {
 
         updateSliderFocusVisual();
 
-        // Color pickers
+        
         addColorButton(controlPanel, "Alapszín [4]", model.getBaseColor(),
             model::setBaseColor);
         controlPanel.add(Box.createVerticalStrut(10));
@@ -427,7 +430,7 @@ public class Fotel extends JFrame {
         try {
             helpWindow.setIconImage(new ImageIcon("icons/help.png").getImage());
         } catch (Exception _) {
-            // Ignore if icon not found
+            
         }
 
         JTextPane helpText = new JTextPane();
@@ -481,5 +484,26 @@ public class Fotel extends JFrame {
 
         helpWindow.add(new JScrollPane(helpText));
         helpWindow.setVisible(true);
+    }
+
+    private void showStartupDialog() {
+        Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+        boolean dontShow = prefs.getBoolean("dontShowStartupDialog", false);
+        if (dontShow) return;
+
+        JCheckBox dontShowAgain = new JCheckBox("Ne mutasd többet");
+        Object[] params = {
+            "<html><b>Üdvözlünk a Fotel alkalmazásban!</b><br>A csúszkák állításához használd a Fel-Le, Jobb-Bal nyilakat és a<b>Shift</b>-et a nagyobb lépéshez.</html>",
+            dontShowAgain
+        };
+        JOptionPane.showMessageDialog(
+            this,
+            params,
+            "Üdvözlet",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+        if (dontShowAgain.isSelected()) {
+            prefs.putBoolean("dontShowStartupDialog", true);
+        }
     }
 }
