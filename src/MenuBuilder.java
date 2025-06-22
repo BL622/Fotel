@@ -29,13 +29,13 @@ public class MenuBuilder {
         fileMenu.add(createMenuItem("Mentés [Ctrl + S]", _ -> new FileManager(parent, model).saveLocal()));
         fileMenu.add(createMenuItem("Mentés másként [Ctrl + Shift + S]", _ -> new FileManager(parent, model).saveToFile()));
 
-        fileMenu.add(createMenuItem("Betöltés [Ctrl + O]", _ ->{
-           new FileManager(parent, model).loadLocal();
-           parent.updateSliders();
-           parent.repaint();
+        fileMenu.add(createMenuItem("Betöltés [Ctrl + O]", _ -> {
+            new FileManager(parent, model).loadLocal();
+            parent.updateSliders();
+            parent.repaint();
         }));
 
-        fileMenu.add(createMenuItem("Betöltés máshonnan [Ctrl + Shift + O]", _ ->{
+        fileMenu.add(createMenuItem("Betöltés máshonnan [Ctrl + Shift + O]", _ -> {
             new FileManager(parent, model).loadFromFile();
             parent.updateSliders();
             parent.repaint();
@@ -57,13 +57,13 @@ public class MenuBuilder {
             parent.repaint();
         }));
 
-        viewMenu.add(createMenuItem("Méretek randomizálása [Ctrl + T]", _ ->{
+        viewMenu.add(createMenuItem("Méretek randomizálása [Ctrl + T]", _ -> {
             model.Randomize(false, true);
             parent.updateSliders();
             parent.repaint();
         }));
 
-        viewMenu.add(createMenuItem("Színek randomizálása [Ctrl + Z]", _ ->{
+        viewMenu.add(createMenuItem("Színek randomizálása [Ctrl + Z]", _ -> {
             model.Randomize(true, false);
             parent.updateSliders();
             parent.repaint();

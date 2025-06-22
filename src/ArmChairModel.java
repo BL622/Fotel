@@ -10,11 +10,11 @@ public class ArmChairModel {
     private Color legColor;
     private Color pillowColor;
 
-    public ArmChairModel(){
+    public ArmChairModel() {
         Randomize(true, true);
     }
 
-    public void Randomize(boolean color, boolean size){
+    public void Randomize(boolean color, boolean size) {
         if (color) {
             Random rnd = new Random();
             baseColor = new Color(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
@@ -30,22 +30,67 @@ public class ArmChairModel {
         }
     }
 
-    public int getWidth() {return width;}
-    public int getHeight() {return height;}
-    public int getDepth() {return depth;}
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getDepth() {
+        return depth;
+    }
+
     public int getArmWidth() {
-        return 20;}
+        return 20;
+    }
+
     public int getLegHeight() {
-        return 20;}
-    public Color getBaseColor() {return baseColor;}
-    public Color getCushionColor() {return cushionColor;}
-    public Color getLegColor() {return legColor;}
-    public Color getPillowColor() {return pillowColor;}
-    public void setWidth(int width) {this.width = width;}
-    public void setHeight(int height) {this.height = height;}
-    public void setDepth(int depth) {this.depth = depth;}
-    public void setBaseColor(Color baseColor) {this.baseColor = baseColor;}
-    public void setCushionColor(Color cushionColor) {this.cushionColor = cushionColor;}
-    public void setLegColor(Color legColor) {this.legColor = legColor;}
-    public void setPillowColor(Color pillowColor) {this.pillowColor = pillowColor;}
+        return 20;
+    }
+
+    public Color getBaseColor() {
+        return baseColor;
+    }
+
+    public Color getCushionColor() {
+        return cushionColor;
+    }
+
+    public Color getLegColor() {
+        return legColor;
+    }
+
+    public Color getPillowColor() {
+        return pillowColor;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
+    public void setBaseColor(Color baseColor) {
+        this.baseColor = baseColor;
+    }
+
+    public void setCushionColor(Color cushionColor) {
+        this.cushionColor = cushionColor;
+    }
+
+    public void setLegColor(Color legColor) {
+        this.legColor = legColor;
+    }
+
+    public void setPillowColor(Color pillowColor) {
+        this.pillowColor = pillowColor;
+    }
 }

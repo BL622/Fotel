@@ -25,7 +25,7 @@ public abstract class ArmChairViewPanel extends JPanel {
         int armWidth = model.getArmWidth();
         int legHeight = model.getLegHeight();
 
-        int seatHeight = height/4;
+        int seatHeight = height / 4;
         int x = (getWidth() / 2) - (width / 2);
         int y = getHeight() - 60;
 
@@ -38,11 +38,13 @@ public abstract class ArmChairViewPanel extends JPanel {
 
         g.setColor(model.getBaseColor());
         g.fillRect(x, y - (int) (height * 0.8) + legHeight, armWidth, (int) (height * 0.8) - legHeight);
-        g.fillRect(x + width - armWidth, y - (int) (height * 0.8) + legHeight, armWidth, (int) (height * 0.8) - legHeight);
+        g.fillRect(x + width - armWidth, y - (int) (height * 0.8) + legHeight, armWidth,
+                (int) (height * 0.8) - legHeight);
         g.fillRect(x + armWidth, y - height + legHeight, width - 2 * armWidth, height - seatHeight);
         g.setColor(Color.BLACK);
         g.drawRect(x, y - (int) (height * 0.8) + legHeight, armWidth, (int) (height * 0.8) - legHeight);
-        g.drawRect(x + width - armWidth, y - (int) (height * 0.8) + legHeight, armWidth, (int) (height * 0.8) - legHeight);
+        g.drawRect(x + width - armWidth, y - (int) (height * 0.8) + legHeight, armWidth,
+                (int) (height * 0.8) - legHeight);
         g.drawRect(x + armWidth, y - height + legHeight, width - 2 * armWidth, height - seatHeight);
 
         g.setColor(model.getCushionColor());
@@ -119,32 +121,30 @@ public abstract class ArmChairViewPanel extends JPanel {
         int seatHeight = height / 4;
         int insideWidth = width - armWidth * 2;
         int sideHeight = (int) (height * 0.8) - legHeight;
-        surface = (int) (
-                (depth * sideHeight) * 2
-                        + (depth * armWidth) * 4 + (sideHeight * armWidth) * 4
-                        + (sideHeight - seatHeight) * (depth - armWidth) * 2
-                        + (insideWidth * seatHeight)
-                        + (insideWidth * (depth - armWidth)) * 2
-                        + (insideWidth * (height - legHeight))
-                        + (insideWidth * (height - legHeight - seatHeight))
-                        + (armWidth * insideWidth) * 2
-                        + ((height - legHeight * 0.2) * armWidth) * 2);
+        surface = (int) ((depth * sideHeight) * 2
+                + (depth * armWidth) * 4 + (sideHeight * armWidth) * 4
+                + (sideHeight - seatHeight) * (depth - armWidth) * 2
+                + (insideWidth * seatHeight)
+                + (insideWidth * (depth - armWidth)) * 2
+                + (insideWidth * (height - legHeight))
+                + (insideWidth * (height - legHeight - seatHeight))
+                + (armWidth * insideWidth) * 2
+                + ((height - legHeight * 0.2) * armWidth) * 2);
 
-        area = (int) (
-                (insideWidth * seatHeight * (depth - armWidth))
-                        + (armWidth * sideHeight * depth) * 2
-                        + (insideWidth * (height - legHeight) * armWidth)
-                        + (5 * 5 * Math.PI * legHeight) * 4
-                        + (float)((height / 4)*armWidth*(insideWidth-10)));
+        area = (int) ((insideWidth * seatHeight * (depth - armWidth))
+                + (armWidth * sideHeight * depth) * 2
+                + (insideWidth * (height - legHeight) * armWidth)
+                + (5 * 5 * Math.PI * legHeight) * 4
+                + (float) ((height / 4) * armWidth * (insideWidth - 10)));
 
         g.setFont(new Font("default", Font.PLAIN, 12));
-        g.drawString((float)width/200 + " m", 200, 40);
-        g.drawString((float)height/200 + " m", 200, 60);
-        g.drawString((float)depth/200 + " m", 200, 80);
-        g.drawString((float)surface/40000 + " m^2", 200, 100);
-        g.drawString((float)area/8000000 + " m^3", 200, 120);
-        g.drawString((float)(width*depth)/40000 + " m^2", 200, 140);
-        g.drawString((float)(width*depth*height)/8000000 + " m^3", 200, 160);
+        g.drawString((float) width / 200 + " m", 200, 40);
+        g.drawString((float) height / 200 + " m", 200, 60);
+        g.drawString((float) depth / 200 + " m", 200, 80);
+        g.drawString((float) surface / 40000 + " m^2", 200, 100);
+        g.drawString((float) area / 8000000 + " m^3", 200, 120);
+        g.drawString((float) (width * depth) / 40000 + " m^2", 200, 140);
+        g.drawString((float) (width * depth * height) / 8000000 + " m^3", 200, 160);
         g.setFont(new Font("default", Font.BOLD, 12));
         g.drawString("Szélesség:", 10, 40);
         g.drawString("Magasság:", 10, 60);

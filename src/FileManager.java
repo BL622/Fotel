@@ -32,13 +32,11 @@ public class FileManager {
             panel.add(inputPanel, BorderLayout.CENTER);
             panel.add(buttonPanel, BorderLayout.SOUTH);
 
-            // Create and show a dialog
             JDialog dialog = new JDialog(parent, "Save File", true);
             dialog.setContentPane(panel);
             dialog.pack();
             dialog.setLocationRelativeTo(parent);
 
-            // Save button action
             saveButton.addActionListener(_ -> {
                 String filename = filenameField.getText().trim();
                 if (!filename.isEmpty()) {
@@ -61,7 +59,6 @@ public class FileManager {
                 }
             });
 
-            // Cancel button action
             cancelButton.addActionListener(_ -> dialog.dispose());
 
             dialog.setVisible(true);
@@ -90,15 +87,13 @@ public class FileManager {
         JFrame frame = new JFrame("Fotel választó");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 150);
-        frame.setLayout(new BorderLayout());
+        frame.setLayout(w BorderLayout());
 
         String rootPath = System.getProperty("user.dir");
-        File rootDir = new File(rootPath);
+        File rootDir = File(rootPath);
 
-        // Create the dropdown
         JComboBox<String> dropdown = new JComboBox<>();
 
-        // List .fotel files and add them to the dropdown
         File[] fotelFiles = rootDir.listFiles((_, name) -> name.endsWith(".fotel"));
         if (fotelFiles != null) {
             for (File file : fotelFiles) {
@@ -107,21 +102,17 @@ public class FileManager {
             }
         }
 
-        // Create buttons
         JButton loadButton = new JButton("Betöltés");
         JButton returnButton = new JButton("Vissza");
 
-        // Top panel with dropdown
         JPanel topPanel = new JPanel();
         topPanel.add(new JLabel("Válaszd ki a betöltendő modelt"));
         topPanel.add(dropdown);
 
-        // Bottom panel with buttons
         JPanel bottomPanel = new JPanel();
         bottomPanel.add(loadButton);
         bottomPanel.add(returnButton);
 
-        // Add panels to frame
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -175,10 +166,8 @@ public class FileManager {
         String rootPath = System.getProperty("user.dir");
         File rootDir = new File(rootPath);
 
-        // Create the dropdown
         JComboBox<String> dropdown = new JComboBox<>();
 
-        // List .fotel files and add them to the dropdown
         File[] fotelFiles = rootDir.listFiles((_, name) -> name.endsWith(".fotel"));
         if (fotelFiles != null) {
             for (File file : fotelFiles) {
@@ -187,28 +176,25 @@ public class FileManager {
             }
         }
 
-        // Create buttons
         JButton deleteButton = new JButton("Törlés");
         JButton returnButton = new JButton("Vissza");
 
-        // Top panel with dropdown
         JPanel topPanel = new JPanel();
         topPanel.add(new JLabel("Válaszd ki a törlendő modelt"));
         topPanel.add(dropdown);
 
-        // Bottom panel with buttons
         JPanel bottomPanel = new JPanel();
         bottomPanel.add(deleteButton);
         bottomPanel.add(returnButton);
 
-        // Add panels to frame
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
         deleteButton.addActionListener(_ -> {
             try {
                 String selected = (String) dropdown.getSelectedItem();
-                if (selected == null) return;
+                if (selected == null)
+                    return;
                 File fileToDelete = new File(System.getProperty("user.dir"), selected + ".fotel");
                 boolean deleted = fileToDelete.delete();
                 if (deleted) {
@@ -218,7 +204,9 @@ public class FileManager {
                         frame.dispose();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(parent, "A fájl törlése nem sikerült!\nTeljes elérési út: " + fileToDelete.getAbsolutePath(), "Hiba", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(parent,
+                            "A fájl törlése nem sikerült!\nTeljes elérési út: " + fileToDelete.getAbsolutePath(),
+                            "Hiba", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(parent, "Hiba a törlés közben:\n" + ex.getMessage(), "Hiba",
