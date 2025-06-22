@@ -6,6 +6,7 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.prefs.Preferences;
 
 public class Fotel extends JFrame {
     private final ArmChairModel model;
@@ -43,6 +44,8 @@ public class Fotel extends JFrame {
                 focusViewMenu();
                 break;
         }
+
+        showStartupDialog();
     }
 
     public void updateView() {
@@ -468,5 +471,26 @@ public class Fotel extends JFrame {
 
         helpWindow.add(new JScrollPane(helpText));
         helpWindow.setVisible(true);
+    }
+
+    private void showStartupDialog() {
+        Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+        boolean dontShow = prefs.getBoolean("dontShowStartupDialog", false);
+        if (dontShow)
+            return;
+
+        JCheckBox dontShowAgain = new JCheckBox("Ne mutasd többet");
+        Object[] params = {
+                "<html><b>Üdvözlünk a Fotel alkalmazásban!</b><br>A csúszkák állításához használd a Fel-Le, Jobb-Bal nyilakat és a<b>Shift</b>-et a nagyobb lépéshez.</html>",
+                dontShowAgain
+        };
+        JOptionPane.showMessageDialog(
+                this,
+                params,
+                "Üdvözlet",
+                JOptionPane.INFORMATION_MESSAGE);
+        if (dontShowAgain.isSelected()) {
+            prefs.putBoolean("dontShowStartupDialog", true);
+        }
     }
 }
