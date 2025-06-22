@@ -27,7 +27,8 @@ public class MenuBuilder {
         JMenu fileMenu = new JMenu("Fájl");
 
         fileMenu.add(createMenuItem("Mentés [Ctrl + S]", _ -> new FileManager(parent, model).saveLocal()));
-        fileMenu.add(createMenuItem("Mentés másként [Ctrl + Shift + S]", _ -> new FileManager(parent, model).saveToFile()));
+        fileMenu.add(
+                createMenuItem("Mentés másként [Ctrl + Shift + S]", _ -> new FileManager(parent, model).saveToFile()));
 
         fileMenu.add(createMenuItem("Betöltés [Ctrl + O]", _ -> {
             new FileManager(parent, model).loadLocal();
