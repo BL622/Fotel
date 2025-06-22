@@ -87,10 +87,10 @@ public class FileManager {
         JFrame frame = new JFrame("Fotel választó");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 150);
-        frame.setLayout(w BorderLayout());
+        frame.setLayout(new BorderLayout());
 
         String rootPath = System.getProperty("user.dir");
-        File rootDir = File(rootPath);
+        File rootDir = new File(rootPath);
 
         JComboBox<String> dropdown = new JComboBox<>();
 
