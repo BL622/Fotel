@@ -19,11 +19,11 @@ public class FileManager {
 
             JTextField filenameField = new JTextField(20);
             JPanel inputPanel = new JPanel();
-            inputPanel.add(new JLabel("File Name:"));
+            inputPanel.add(new JLabel("Fájl név:"));
             inputPanel.add(filenameField);
 
-            JButton saveButton = new JButton("Save");
-            JButton cancelButton = new JButton("Return");
+            JButton saveButton = new JButton("Mentés");
+            JButton cancelButton = new JButton("Vissza");
 
             JPanel buttonPanel = new JPanel();
             buttonPanel.add(saveButton);
@@ -32,7 +32,7 @@ public class FileManager {
             panel.add(inputPanel, BorderLayout.CENTER);
             panel.add(buttonPanel, BorderLayout.SOUTH);
 
-            JDialog dialog = new JDialog(parent, "Save File", true);
+            JDialog dialog = new JDialog(parent, "Mentés", true);
             dialog.setContentPane(panel);
             dialog.pack();
             dialog.setLocationRelativeTo(parent);

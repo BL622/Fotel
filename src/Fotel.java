@@ -66,6 +66,7 @@ public class Fotel extends JFrame {
     }
 
     private void normalViewMenu() {
+        setTitle("Fotel");
 
         JPanel controlPanel = createControlPanel();
         add(controlPanel, BorderLayout.WEST);
@@ -412,7 +413,8 @@ public class Fotel extends JFrame {
 
     public static void help() {
         JFrame helpWindow = new JFrame("Súgó");
-        helpWindow.setSize(800, 540);
+        helpWindow.setSize(800, 1000);
+        helpWindow.setLocationRelativeTo(null);
         helpWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         try {
@@ -429,7 +431,7 @@ public class Fotel extends JFrame {
                         <div style='border-radius:12px; border:1px solid #d1d5db; background:#fff; box-shadow:0 2px 8px #0001; padding:24px;'>
                         <h1 style='color:#1976d2; margin-top:0;'>Fotel Súgó</h1>
                         <h2 style='color:#388e3c;'>Névjegy</h2>
-                        <b>Készítette:</b><br>Balics Attila Ádám - Z58T3N<br>Balogh Levente HOAFBT<br><br>
+                        <b>Készítette:</b><br>Balics Attila Ádám - Z58T3N<br>Balogh Levente - HOAFBT<br><br>
                         <h2 style='color:#388e3c;'>Használati útmutató</h2>
                         <ul style='margin-bottom:0.5em;'>
                             <li><b>[1]</b> Szélesség állítása a Fel-Le, Jobb-Bal nyilakkal, <b>Shift</b>-tel nagyobb lépés.</li>
